@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		367CEC4420B2913B00BD879B /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 367CEC4320B2913B00BD879B /* main.swift */; };
+		36F8E75520B3DBBC004D086D /* EventHub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F8E75420B3DBBC004D086D /* EventHub.swift */; };
+		36F8E75720B3DBE2004D086D /* EventSequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F8E75620B3DBE2004D086D /* EventSequence.swift */; };
+		36F8E75920B3DC31004D086D /* EventStreamer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F8E75820B3DC31004D086D /* EventStreamer.swift */; };
+		36F8E75B20B3E33E004D086D /* AuthenticationAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F8E75A20B3E33E004D086D /* AuthenticationAPI.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +29,10 @@
 /* Begin PBXFileReference section */
 		367CEC4020B2913A00BD879B /* EventStreamer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = EventStreamer; sourceTree = BUILT_PRODUCTS_DIR; };
 		367CEC4320B2913B00BD879B /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		36F8E75420B3DBBC004D086D /* EventHub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventHub.swift; sourceTree = "<group>"; };
+		36F8E75620B3DBE2004D086D /* EventSequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventSequence.swift; sourceTree = "<group>"; };
+		36F8E75820B3DC31004D086D /* EventStreamer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventStreamer.swift; sourceTree = "<group>"; };
+		36F8E75A20B3E33E004D086D /* AuthenticationAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationAPI.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +66,10 @@
 			isa = PBXGroup;
 			children = (
 				367CEC4320B2913B00BD879B /* main.swift */,
+				36F8E75420B3DBBC004D086D /* EventHub.swift */,
+				36F8E75620B3DBE2004D086D /* EventSequence.swift */,
+				36F8E75820B3DC31004D086D /* EventStreamer.swift */,
+				36F8E75A20B3E33E004D086D /* AuthenticationAPI.swift */,
 			);
 			path = EventStreamer;
 			sourceTree = "<group>";
@@ -119,7 +131,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				36F8E75520B3DBBC004D086D /* EventHub.swift in Sources */,
 				367CEC4420B2913B00BD879B /* main.swift in Sources */,
+				36F8E75720B3DBE2004D086D /* EventSequence.swift in Sources */,
+				36F8E75B20B3E33E004D086D /* AuthenticationAPI.swift in Sources */,
+				36F8E75920B3DC31004D086D /* EventStreamer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

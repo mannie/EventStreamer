@@ -8,5 +8,26 @@
 
 import Foundation
 
-print("Hello, World!")
+
+
+let hub = EventHub(namespace: "", path: "")
+let key = AuthenticationAPI.AccessKey(name: "", value: "")
+let authAPI = AuthenticationAPI(endpoint: "")
+
+
+
+let streamerNames = [ "qwerty", "asdf", "uiop" ]
+let streamers = streamerNames.map { EventStreamer(name: $0, authenticationAPI: authAPI) }
+
+let group = DispatchGroup()
+
+for data in streamers {
+    group.enter()
+    data.stream(to: hub, using: key) {
+        group.leave()
+    }
+}
+
+group.wait()
+
 
