@@ -8,7 +8,7 @@
 
 import Foundation
 
-class EventStreamer {
+final class EventStreamer {
     
     private var sequence: EventSequence
     private let authenticationAPI: AuthenticationAPI
