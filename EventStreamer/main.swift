@@ -10,9 +10,9 @@ import Foundation
 
 
 
-let hub = EventHub(namespace: "", path: "")
-let key = AuthenticationAPI.AccessKey(name: "", value: "")
-let authAPI = AuthenticationAPI(endpoint: "")
+let hub = EventHub()
+let key = AuthenticationAPI.AccessKey()
+let authAPI = AuthenticationAPI()
 
 
 
