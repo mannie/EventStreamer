@@ -12,6 +12,9 @@ protocol CustomDictionaryConvertible {
     var dictionary: [String:CustomStringConvertible] { get }
 }
 
+/**
+ * This is a sequence generator based on a pseudo-random number generator based on the previous number.
+ */
 struct EventSequence: Sequence, IteratorProtocol {
     
     struct Event {

@@ -8,6 +8,9 @@
 
 import Foundation
 
+/**
+ * This class acts as the local API for the Azure EventHubs HTTP Client.
+ */
 final class EventStreamer {
     
     private var sequence: EventSequence
@@ -23,19 +26,19 @@ final class EventStreamer {
         self.init(sequence: sequence, authenticationAPI: authenticationAPI)
     }
     
-    func stream(to hub: EventHub, sleeping duration: UInt32 = 5, using key: AuthenticationAPI.AccessKey, invoking onStream: ((EventSequence.Event)->Void)?=nil, completion: (()->Void)?=nil) {
-        authenticationAPI.requestToken(for: hub, with: key) { (token) in
+    func stream(to hub: EventHub, invoking onStream: ((EventSequence.Event)->Void)?=nil, maxWait duration: UInt32 = 5, completion: (()->Void)?=nil) {
+        authenticationAPI.requestToken(for: hub) { (token) in
             guard let token = token else {
                 return
             }
             
             DispatchQueue.global().async {
-                self.stream(sleeping: duration, using: token, invoking: onStream, completion: completion)
+                self.stream(using: token, invoking: onStream, maxWait: duration, completion: completion)
             }
         }
     }
     
-    private func stream(sleeping duration: UInt32, using token: String, invoking onStream: ((EventSequence.Event)->Void)?=nil, completion: (()->Void)?=nil) {
+    private func stream(using token: String, invoking onStream: ((EventSequence.Event)->Void)?=nil, maxWait duration: UInt32, completion: (()->Void)?=nil) {
         var request = URLRequest(url: hub.messageEndpoint)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")

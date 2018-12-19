@@ -8,10 +8,19 @@
 
 import Foundation
 
+/**
+ * This model contains the components identifying an Azure EventHub along with the required shared access policy.
+ */
 struct EventHub {
     
+    struct SharedAccessPolicy {
+        let name: String
+        let value: String
+    }
+
     let namespace: String
     let name: String
+    let policy: SharedAccessPolicy
     
     private var resourcePath: String {
         return "https://\(namespace).servicebus.windows.net/\(name)".lowercased()

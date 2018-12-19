@@ -8,13 +8,11 @@
 
 import Foundation
 
+/**
+ * This struct acts as the local API for the Azure Function generating the SAS token for accessing the Azure EventHub.
+ */
 struct AuthenticationAPI {
-    
-    struct AccessKey {
-        let name: String
-        let value: String
-    }
-    
+        
     private let endpoint: URL
     
     init(endpoint: String) {
@@ -24,8 +22,8 @@ struct AuthenticationAPI {
         self.endpoint = url
     }
     
-    func requestToken(for hub: EventHub, with key: AccessKey, completion: ((String?)->Void)?) {
-        let body = [ "uri": hub.tokenEndpoint.absoluteString, "name" : key.name, "value" : key.value ]
+    func requestToken(for hub: EventHub, completion: ((String?)->Void)?) {
+        let body = [ "uri": hub.tokenEndpoint.absoluteString, "name" : hub.policy.name, "value" : hub.policy.value ]
         
         var request = URLRequest(url: endpoint)
         request.httpMethod = "POST"

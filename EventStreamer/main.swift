@@ -8,88 +8,69 @@
 
 import Foundation
 
+/*
+ * Create an EventHub in Azure along with a shared access policy allowing for clients to send events.
+ * Paste the `namespace` of the Azure EventHubs and the `name` (path) of the Azure EventHub in the `hub` object's initializtion.
+ * Paste the `name` and `value` (key) of the Azure EventHub's shared access policy into the `policy` object's initialization.
+ */
+let policy = EventHub.SharedAccessPolicy(name: <#T##String#>, value: <#T##String#>)
+let hub = EventHub(namespace: <#T##String#>, name: <#T##String#>, policy: policy)
 
+/*
+ `endpoint` references the Azure Function which will be used to generate the SAS token.
+ Deploy `function.csx` into an Azure Function and paste the Azure Function URL below.
+ */
+let tokenAPI = AuthenticationAPI(endpoint: <#T##String#>)
 
-let hub = EventHub()
-let key = AuthenticationAPI.AccessKey()
-let authAPI = AuthenticationAPI()
-
-
-
-typealias TerminationCondition = ()->Bool
-
-func stream(events: [String], to hub: EventHub, authenticatingVia authAPI: AuthenticationAPI, until condition: @escaping TerminationCondition) {
-    // Creating EventStreamer objects in this way randomizes the initial value for underlying EventSequence objects
-    let streamers = events.map { EventStreamer(name: $0, authenticationAPI: authAPI) }
-    
-    let group = DispatchGroup()
-    group.enter()
-
-    for streamer in streamers {
-        streamer.stream(to: hub, using: key, invoking: {
-            print($0)
-            let _ = $0
-            
-            if condition() {
-                group.leave()
-            }
-        })
-    }
-    
-    group.wait()
-}
-
-func stream(event: String, to hub: EventHub, authenticatingVia authAPI: AuthenticationAPI, until condition: @escaping TerminationCondition) {
-    stream(events: [ event ], to: hub, authenticatingVia: authAPI, until: condition)
-}
-
-typealias Event = (name: String, initialValue: Int, maxWait: UInt32)
-func stream(events definitions: [Event], to hub: EventHub, authenticatingVia authAPI: AuthenticationAPI, until condition: @escaping TerminationCondition) {
-    typealias SleepingStreamer = (streamer: EventStreamer, maxWait: UInt32)
-    
-    let streamers: [SleepingStreamer] = definitions.map {
-        let sequence = EventSequence(name: $0.name, initialValue: $0.initialValue)
-        let streamer = EventStreamer(sequence: sequence, authenticationAPI: authAPI)
-        return (streamer: streamer, maxWait: $0.maxWait)
-    }
-    
-    let group = DispatchGroup()
-    group.enter()
-
-    let onStream = { (event: EventSequence.Event) in
-        print(event)
-        
-        if condition() {
-            group.leave()
-        }
-    }
-    
-    for s in streamers {
-        s.streamer.stream(to: hub, sleeping: s.maxWait, using: key, invoking: onStream)
-    }
-    
-    group.wait()
-}
-
-func stream(event definition: Event, to hub: EventHub, authenticatingVia authAPI: AuthenticationAPI, until condition: @escaping TerminationCondition) {
-    stream(events: [ definition ], to: hub, authenticatingVia: authAPI, until: condition)
-}
-
-
+/*
+ * Change `count` to limit the number of events being generated and streamed to Azure EventHubs.
+ */
 var count = Int.max
 func countReachesZero() -> Bool {
     count -= 1
     return count <= 0
 }
 
-//stream(event: "ping", to: hub, authenticatingVia: authAPI, until: countReachesZero)
+/*
+ * Events sent to Azure EventHubs are sent via `EventStreamer` as JSON objects similar to the following payloads:
+ 
+ {
+    "initial" : 7,
+    "name" : "ping",
+    "current" : 9
+ }
+ 
+ {
+    "initial" : 7,
+    "name" : "ping",
+    "current" : 9,
+    "previous" : 11
+ }
+ */
 
-//stream(events: [ "deposit", "withdrawal", "purchase" ], to: hub, authenticatingVia: authAPI, until: countReachesZero)
+/*
+ * Send events with name "ping", with a pseudo-random initial value, and a delay of <5 secs between each event
+ */
+stream(event: "ping", to: hub, until: countReachesZero, using: tokenAPI)
 
-//let ping: Event = (name: "ping", initialValue: 128, maxWait: 3)
-//stream(event: ping, to: hub, authenticatingVia: authAPI, until: countReachesZero)
+/*
+ * Send events with names "deposit", "withdrawal", and "purchase".
+ * The initial values are pseudo-random, and a delay of <5 secs is added between each event.
+ * Each event names acts as a unique stream of events; the delays and values are calculated independently in each stream.
+ */
+//stream(events: [ "deposit", "withdrawal", "purchase" ], to: hub, until: countReachesZero, using: tokenAPI)
 
-let deposit: Event = (name: "deposit", initialValue: 100, maxWait: 10)
-let withdrawal: Event = (name: "withdrawal", initialValue: 7, maxWait: 3)
-let purchase: Event = (name: "purchase", initialValue: 5, maxWait: 3)
-stream(events: [ deposit, withdrawal, purchase ], to: hub, authenticatingVia: authAPI, until: countReachesZero)
+/*
+ * Send events with name "ping"; the initial value and max delay are defined.
+ */
+//let ping: EventMetadata = (name: "ping", initialValue: 128, maxWait: 3)
+//stream(event: ping, to: hub, until: countReachesZero, using: tokenAPI)
+
+/*
+ * Send events with names "deposit", "withdrawal", and "purchase".
+ * The initial values and max delays are defined per event stream.
+ */
+//let deposit: EventMetadata = (name: "deposit", initialValue: 100, maxWait: 10)
+//let withdrawal: EventMetadata = (name: "withdrawal", initialValue: 7, maxWait: 3)
+//let purchase: EventMetadata = (name: "purchase", initialValue: 5, maxWait: 3)
+//stream(events: [ deposit, withdrawal, purchase ], to: hub, until: countReachesZero, using: tokenAPI)
