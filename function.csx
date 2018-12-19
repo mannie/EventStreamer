@@ -10,8 +10,8 @@ using System.Security.Cryptography;
 private static string createToken(string resourceUri, string keyName, string key)
 {
     TimeSpan sinceEpoch = DateTime.UtcNow - new DateTime(1970, 1, 1);
-    var week = 60 * 60 * 24 * 7;
-    var expiry = Convert.ToString((int)sinceEpoch.TotalSeconds + week);
+    var hour = 60 * 60;
+    var expiry = Convert.ToString((int)sinceEpoch.TotalSeconds + hour);
     string stringToSign = HttpUtility.UrlEncode(resourceUri) + "\n" + expiry;
     HMACSHA256 hmac = new HMACSHA256(Encoding.UTF8.GetBytes(key));
     var signature = Convert.ToBase64String(hmac.ComputeHash(Encoding.UTF8.GetBytes(stringToSign)));
