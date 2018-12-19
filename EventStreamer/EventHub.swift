@@ -11,10 +11,10 @@ import Foundation
 struct EventHub {
     
     let namespace: String
-    let path: String
+    let name: String
     
     private var resourcePath: String {
-        return "https://\(namespace).servicebus.windows.net/\(path)".lowercased()
+        return "https://\(namespace).servicebus.windows.net/\(name)".lowercased()
     }
     
     var tokenEndpoint: URL {
