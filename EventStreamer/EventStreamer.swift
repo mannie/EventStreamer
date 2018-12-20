@@ -8,6 +8,9 @@
 
 import Foundation
 
+typealias CompletionHandler = (()->Void)
+typealias TerminationCondition = ()->Bool
+
 /**
  * This class acts as the local API for the Azure EventHubs HTTP Client.
  */
@@ -26,19 +29,23 @@ final class EventStreamer {
         self.init(sequence: sequence, authenticationAPI: authenticationAPI)
     }
     
-    func stream(to hub: EventHub, invoking onStream: ((EventSequence.Event)->Void)?=nil, maxWait duration: UInt32 = 5, completion: (()->Void)?=nil) {
-        authenticationAPI.requestToken(for: hub) { (token) in
-            guard let token = token else {
-                return
+    func stream(to hub: EventHub, until condition: @escaping TerminationCondition, invoking onStream: ((EventSequence.Event)->Void)?=nil, maxWait duration: UInt32 = 5, completion: CompletionHandler?=nil) {
+        DispatchQueue.global().async {
+            
+            self.authenticationAPI.requestToken(for: hub) { (token) in
+                guard let token = token else {
+                    return
+                }
+                
+                DispatchQueue.global().async {
+                    self.stream(using: token, until: condition, invoking: onStream, maxWait: duration, completion: completion)
+                }
             }
             
-            DispatchQueue.global().async {
-                self.stream(using: token, invoking: onStream, maxWait: duration, completion: completion)
-            }
         }
     }
     
-    private func stream(using token: String, invoking onStream: ((EventSequence.Event)->Void)?=nil, maxWait duration: UInt32, completion: (()->Void)?=nil) {
+    private func stream(using token: String, until condition: @escaping TerminationCondition, invoking onStream: ((EventSequence.Event)->Void)?=nil, maxWait duration: UInt32, completion: CompletionHandler?=nil) {
         var request = URLRequest(url: hub.messageEndpoint)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -57,7 +64,7 @@ final class EventStreamer {
             sendEvent.resume()
             
             Thread.sleep(forTimeInterval: TimeInterval(arc4random() % duration))
-        } while sequence.next() != nil
+        } while condition() == false && sequence.next() != nil
         
         completion?()
     }

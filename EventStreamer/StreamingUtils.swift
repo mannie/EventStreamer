@@ -8,35 +8,43 @@
 
 import Foundation
 
-typealias TerminationCondition = ()->Bool
+func stream(events: [String], to hub: EventHub, limit: UInt=UInt.max, using authAPI: AuthenticationAPI, completion handler: CompletionHandler?=nil) {
+    var count = 0
+    func limitReached() -> Bool {
+        return count >= limit
+    }
 
-func stream(events: [String], to hub: EventHub, until condition: @escaping TerminationCondition, using authAPI: AuthenticationAPI) {
+    func printEventAndIncrementCount(event: EventSequence.Event) {
+        print(event)
+        count += 1
+    }
+
     // Creating EventStreamer objects in this way randomizes the initial value for underlying EventSequence objects
     let streamers = events.map { EventStreamer(name: $0, authenticationAPI: authAPI) }
-    
-    let group = DispatchGroup()
-    group.enter()
-    
     for streamer in streamers {
-        streamer.stream(to: hub, invoking: {
-            print($0)
-            let _ = $0
-            
-            if condition() {
-                group.leave()
-            }
-        })
+        streamer.stream(to: hub, until: limitReached, invoking: printEventAndIncrementCount, completion: handler)
     }
-    
-    group.wait()
 }
 
-func stream(event: String, to hub: EventHub, until condition: @escaping TerminationCondition, using authAPI: AuthenticationAPI) {
-    stream(events: [ event ], to: hub, until: condition, using: authAPI)
+func stream(event: String, to hub: EventHub, limit: UInt=UInt.max, using authAPI: AuthenticationAPI, completion handler: CompletionHandler?=nil) {
+    stream(events: [ event ], to: hub, limit: limit, using: authAPI, completion: handler)
 }
+
+
 
 typealias EventMetadata = (name: String, initialValue: Int, maxWait: UInt32)
-func stream(events definitions: [EventMetadata], to hub: EventHub, until condition: @escaping TerminationCondition, using authAPI: AuthenticationAPI) {
+
+func stream(events definitions: [EventMetadata], to hub: EventHub, limit: UInt=UInt.max, using authAPI: AuthenticationAPI, completion handler: CompletionHandler?=nil) {
+    var count = 0
+    func limitReached() -> Bool {
+        return count >= limit
+    }
+    
+    func printEventAndIncrementCount(event: EventSequence.Event) {
+        print(event)
+        count += 1
+    }
+
     typealias SleepingStreamer = (streamer: EventStreamer, maxWait: UInt32)
     
     let streamers: [SleepingStreamer] = definitions.map {
@@ -45,24 +53,11 @@ func stream(events definitions: [EventMetadata], to hub: EventHub, until conditi
         return (streamer: streamer, maxWait: $0.maxWait)
     }
     
-    let group = DispatchGroup()
-    group.enter()
-    
-    let onStream = { (event: EventSequence.Event) in
-        print(event)
-        
-        if condition() {
-            group.leave()
-        }
-    }
-    
     for s in streamers {
-        s.streamer.stream(to: hub, invoking: onStream, maxWait: s.maxWait)
+        s.streamer.stream(to: hub, until: limitReached, invoking: printEventAndIncrementCount, maxWait: s.maxWait, completion: handler)
     }
-    
-    group.wait()
 }
 
-func stream(event definition: EventMetadata, to hub: EventHub, until condition: @escaping TerminationCondition, using authAPI: AuthenticationAPI) {
-    stream(events: [ definition ], to: hub, until: condition, using: authAPI)
+func stream(event definition: EventMetadata, to hub: EventHub, limit: UInt=UInt.max, using authAPI: AuthenticationAPI, completion handler: CompletionHandler?=nil) {
+    stream(events: [ definition ], to: hub, limit: limit, using: authAPI, completion: handler)
 }
