@@ -99,9 +99,9 @@ let ping: EventMetadata = (name: "ping", initialValue: 128, maxWait: 3)
  * The initial values and max delays are defined per event stream.
  */
 
-let deposit: EventMetadata = (name: "deposit", initialValue: 100, maxWait: 10)
-let withdrawal: EventMetadata = (name: "withdrawal", initialValue: 7, maxWait: 3)
-let purchase: EventMetadata = (name: "purchase", initialValue: 5, maxWait: 3)
+let deposit: EventMetadata = (name: "deposit", initialValue: 1000, maxWait: 14)
+let withdrawal: EventMetadata = (name: "withdrawal", initialValue: 50, maxWait: 7)
+let purchase: EventMetadata = (name: "purchase", initialValue: 10, maxWait: 3)
 
 //stream(events: [ deposit, withdrawal, purchase ], to: hub, limit: 37, using: tokenAPI, completion: exit) // has upper limit
 //wait()
@@ -109,4 +109,5 @@ let purchase: EventMetadata = (name: "purchase", initialValue: 5, maxWait: 3)
 stream(events: [ deposit, withdrawal, purchase ], to: hub, using: tokenAPI, completion: exit) // unbound number of streamed events
 wait()
 
-
+//stream(events: [ deposit, withdrawal, purchase ], to: hub, using: tokenAPI, connectivity: .offline, completion: exit) // unbound number of logged events; these aren't streamed to Azure
+//wait()
