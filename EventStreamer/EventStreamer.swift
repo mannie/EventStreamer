@@ -16,79 +16,63 @@ typealias TerminationCondition = ()->Bool
  */
 final class EventStreamer {
     
-    enum Connectivity {
-        case offline, online
-    }
-    
     private var sequence: EventSequence
-    private let authenticationAPI: AuthenticationAPI
-    private let connectivity: Connectivity
     
-    init(sequence: EventSequence, authenticationAPI: AuthenticationAPI, connectivity: Connectivity) {
+    init(sequence: EventSequence) {
         self.sequence = sequence
-        self.authenticationAPI = authenticationAPI
-        self.connectivity = connectivity
     }
     
-    convenience init(name: String, authenticationAPI: AuthenticationAPI, connectivity: Connectivity) {
+    convenience init(name: String) {
         let sequence = EventSequence(name: name)
-        self.init(sequence: sequence, authenticationAPI: authenticationAPI, connectivity: connectivity)
+        self.init(sequence: sequence)
     }
     
-    func stream(to hub: EventHub, until condition: @escaping TerminationCondition, invoking onStream: ((EventSequence.Event)->Void)?=nil, maxWait duration: UInt32 = 5, completion: CompletionHandler?=nil) {
-        DispatchQueue.global().async {
-            switch self.connectivity {
-            case .offline:
-                self.stream(until: condition, invoking: onStream, maxWait: duration, completion: completion)
+    private func request(for hub: EventHub, using token: String?) -> URLRequest? {
+        guard let token = token else {
+            return nil
+        }
+        
+        var request = URLRequest(url: hub.messageEndpoint)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue(token, forHTTPHeaderField: "Authorization")
+        return request
+    }
+    
+    internal func stream(to hub: EventHub,
+                         using token: String?,
+                         until condition: @escaping TerminationCondition,
+                         invoking onStream: ((EventSequence.Event)->Void)?,
+                         maxWait duration: UInt32=5,
+                         completion: CompletionHandler?=nil) {
+        
+        func stream() {
+            repeat {
+                let event = sequence.current
                 
-            case .online:
-                self.authenticationAPI.requestToken(for: hub) { (token) in
-                    guard let token = token else {
-                        return
-                    }
+                if var request = request(for: hub, using: token) {
+                    request.httpBody = try? JSONSerialization.data(withJSONObject: sequence.dictionary, options: .prettyPrinted)
                     
-                    DispatchQueue.global().async {
-                        self.stream(using: token, until: condition, invoking: onStream, maxWait: duration, completion: completion)
+                    let sendEvent = URLSession.shared.dataTask(with: request) { (data, response, error) in
+                        if let error = error {
+                            print("*** \(error) ***")
+                        }
+                        onStream?(event)
                     }
+                    sendEvent.resume()
+                } else {
+                    onStream?(event)
                 }
-            }
-        }
-    }
-    
-    private func stream(using token: String?=nil, until condition: @escaping TerminationCondition, invoking onStream: ((EventSequence.Event)->Void)?=nil, maxWait duration: UInt32, completion: CompletionHandler?=nil) {
-        var request: URLRequest? = nil
-        
-        if let token = token {
-            request = URLRequest(url: hub.messageEndpoint)
-            request?.httpMethod = "POST"
-            request?.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            request?.setValue(token, forHTTPHeaderField: "Authorization")
-        }
-        
-        repeat {
-            defer {
+                
                 Thread.sleep(forTimeInterval: TimeInterval(arc4random() % duration))
-            }
+            } while condition() == false && sequence.next() != nil
             
-            let event = sequence.current
-            
-            guard var request = request else {
-                onStream?(event)
-                continue
-            }
-            
-            request.httpBody = try? JSONSerialization.data(withJSONObject: sequence.dictionary, options: .prettyPrinted)
-            
-            let sendEvent = URLSession.shared.dataTask(with: request) { (data, response, error) in
-                if let error = error {
-                    print("*** \(error) ***")
-                }
-                onStream?(event)
-            }
-            sendEvent.resume()
-        } while condition() == false && sequence.next() != nil
-
-        completion?()
+            completion?()
+        }
+        
+        DispatchQueue.global().async {
+            stream()
+        }
     }
     
 }

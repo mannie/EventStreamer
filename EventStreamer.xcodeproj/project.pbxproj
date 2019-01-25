@@ -13,7 +13,6 @@
 		36F8E75520B3DBBC004D086D /* EventHub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F8E75420B3DBBC004D086D /* EventHub.swift */; };
 		36F8E75720B3DBE2004D086D /* EventSequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F8E75620B3DBE2004D086D /* EventSequence.swift */; };
 		36F8E75920B3DC31004D086D /* EventStreamer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F8E75820B3DC31004D086D /* EventStreamer.swift */; };
-		36F8E75B20B3E33E004D086D /* AuthenticationAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F8E75A20B3E33E004D086D /* AuthenticationAPI.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,7 +52,6 @@
 		36F8E75420B3DBBC004D086D /* EventHub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventHub.swift; sourceTree = "<group>"; };
 		36F8E75620B3DBE2004D086D /* EventSequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventSequence.swift; sourceTree = "<group>"; };
 		36F8E75820B3DC31004D086D /* EventStreamer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventStreamer.swift; sourceTree = "<group>"; };
-		36F8E75A20B3E33E004D086D /* AuthenticationAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationAPI.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,7 +108,6 @@
 				36F8E75420B3DBBC004D086D /* EventHub.swift */,
 				36F8E75620B3DBE2004D086D /* EventSequence.swift */,
 				36F8E75820B3DC31004D086D /* EventStreamer.swift */,
-				36F8E75A20B3E33E004D086D /* AuthenticationAPI.swift */,
 			);
 			path = EventStreamer;
 			sourceTree = "<group>";
@@ -199,7 +196,6 @@
 				367CEC4420B2913B00BD879B /* main.swift in Sources */,
 				36F58BE521CAEA9900B8195C /* StreamingUtils.swift in Sources */,
 				36F8E75720B3DBE2004D086D /* EventSequence.swift in Sources */,
-				36F8E75B20B3E33E004D086D /* AuthenticationAPI.swift in Sources */,
 				36F8E75920B3DC31004D086D /* EventStreamer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
