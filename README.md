@@ -5,6 +5,7 @@ A sample app showing how to stream data to Azure Event Hubs.
  * Create an EventHub in Azure along with a shared access policy allowing for clients to send events.
  * Update the project dependencies:
  ```
+ git submodule init
  git submodule sync
  git submodule update
  ```
