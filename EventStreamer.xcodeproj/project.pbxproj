@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3649545E21FB915600B54404 /* AzureCocoaSAS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3649545A21FB914300B54404 /* AzureCocoaSAS.framework */; };
 		367CEC4420B2913B00BD879B /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 367CEC4320B2913B00BD879B /* main.swift */; };
 		36F58BE521CAEA9900B8195C /* StreamingUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F58BE421CAEA9900B8195C /* StreamingUtils.swift */; };
 		36F8E75520B3DBBC004D086D /* EventHub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F8E75420B3DBBC004D086D /* EventHub.swift */; };
@@ -14,6 +15,23 @@
 		36F8E75920B3DC31004D086D /* EventStreamer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F8E75820B3DC31004D086D /* EventStreamer.swift */; };
 		36F8E75B20B3E33E004D086D /* AuthenticationAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F8E75A20B3E33E004D086D /* AuthenticationAPI.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		3649545921FB914300B54404 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3649545421FB914300B54404 /* AzureCocoaSAS.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 36B6309E21FB690800E3A24F;
+			remoteInfo = AzureCocoaSAS;
+		};
+		3649545B21FB914300B54404 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3649545421FB914300B54404 /* AzureCocoaSAS.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 36B630B021FB6EB800E3A24F;
+			remoteInfo = AzureCocoaTouchSAS;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		367CEC3E20B2913A00BD879B /* CopyFiles */ = {
@@ -28,6 +46,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3649545421FB914300B54404 /* AzureCocoaSAS.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AzureCocoaSAS.xcodeproj; path = AzureCocoaSAS/AzureCocoaSAS.xcodeproj; sourceTree = "<group>"; };
 		367CEC4020B2913A00BD879B /* EventStreamer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = EventStreamer; sourceTree = BUILT_PRODUCTS_DIR; };
 		367CEC4320B2913B00BD879B /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		36F58BE421CAEA9900B8195C /* StreamingUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamingUtils.swift; sourceTree = "<group>"; };
@@ -42,17 +61,36 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3649545E21FB915600B54404 /* AzureCocoaSAS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3649545521FB914300B54404 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3649545A21FB914300B54404 /* AzureCocoaSAS.framework */,
+				3649545C21FB914300B54404 /* AzureCocoaTouchSAS.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		3649545D21FB915600B54404 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		367CEC3720B2913A00BD879B = {
 			isa = PBXGroup;
 			children = (
+				3649545421FB914300B54404 /* AzureCocoaSAS.xcodeproj */,
 				367CEC4220B2913A00BD879B /* EventStreamer */,
 				367CEC4120B2913A00BD879B /* Products */,
+				3649545D21FB915600B54404 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -122,12 +160,35 @@
 			mainGroup = 367CEC3720B2913A00BD879B;
 			productRefGroup = 367CEC4120B2913A00BD879B /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 3649545521FB914300B54404 /* Products */;
+					ProjectRef = 3649545421FB914300B54404 /* AzureCocoaSAS.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				367CEC3F20B2913A00BD879B /* EventStreamer */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		3649545A21FB914300B54404 /* AzureCocoaSAS.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = AzureCocoaSAS.framework;
+			remoteRef = 3649545921FB914300B54404 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		3649545C21FB914300B54404 /* AzureCocoaTouchSAS.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = AzureCocoaTouchSAS.framework;
+			remoteRef = 3649545B21FB914300B54404 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXSourcesBuildPhase section */
 		367CEC3C20B2913A00BD879B /* Sources */ = {
