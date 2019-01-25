@@ -3,7 +3,7 @@ A sample app showing how to stream data to Azure Event Hubs.
 
 ## Getting Started
  * Create an EventHub in Azure along with a shared access policy allowing for clients to send events.
- * Update the project dependencies:
+ * Update the project dependencies ([AzureCocoaSAS](https://github.com/mannie/AzureCocoaSAS)):
  ```
  git submodule init
  git submodule sync
