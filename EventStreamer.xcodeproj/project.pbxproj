@@ -30,6 +30,13 @@
 			remoteGlobalIDString = 36B630B021FB6EB800E3A24F;
 			remoteInfo = AzureCocoaTouchSAS;
 		};
+		365EF65D21FBB16C00EF5A2B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3649545421FB914300B54404 /* AzureCocoaSAS.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 36B6309D21FB690800E3A24F;
+			remoteInfo = AzureCocoaSAS;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -126,6 +133,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				365EF65E21FBB16C00EF5A2B /* PBXTargetDependency */,
 			);
 			name = EventStreamer;
 			productName = EventStreamer;
@@ -201,6 +209,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		365EF65E21FBB16C00EF5A2B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = AzureCocoaSAS;
+			targetProxy = 365EF65D21FBB16C00EF5A2B /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		367CEC4520B2913B00BD879B /* Debug */ = {
