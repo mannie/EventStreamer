@@ -24,8 +24,8 @@ token = try? AzureCocoaSAS.generateToken(for: hub.endpoint.absoluteString, using
 
 /*
  * Events sent to Azure EventHubs are sent via `EventStreamer` as JSON objects similar to the following payloads:
- { "initial" : 7, "name" : "ping", "current" : 9 }
- { "initial" : 7, "name" : "ping", "current" : 9, "previous" : 11 }
+ { "timestamp" : 1549566851, "name" : "ping", "initial" : 7, "current" : 9 }
+ { "timestamp" : 1549566851, "name" : "ping", "initial" : 7, "current" : 9, "previous" : 11 }
  */
 
 

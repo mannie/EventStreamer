@@ -51,7 +51,10 @@ final class EventStreamer {
                 let event = sequence.current
                 
                 if var request = request(for: hub, using: token) {
-                    request.httpBody = try? JSONSerialization.data(withJSONObject: sequence.dictionary, options: .prettyPrinted)
+                    var payload = sequence.dictionary
+                    payload["timestamp"] = UInt64(Date().timeIntervalSince1970)
+                    
+                    request.httpBody = try? JSONSerialization.data(withJSONObject: payload, options: .prettyPrinted)
                     
                     let sendEvent = URLSession.shared.dataTask(with: request) { (data, response, error) in
                         if let error = error {
