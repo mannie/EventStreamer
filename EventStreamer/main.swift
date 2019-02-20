@@ -16,10 +16,11 @@ import AzureCocoaSAS
  * Paste the `name` and `key` of the Azure EventHub's shared access policy into the `policy` object's initialization.
  */
 let policy = AzureCocoaSAS.SharedAccessPolicy(name: <#T##String#>, key: <#T##String#>)
-let hub = EventHub(namespace: <#String#>, name: <#String#>)
+let hub = EventHub(namespace: <#String#>, name: <#String#>) // => http://$namespace.servicebus.windows.net/$name
 
 var token: String? = nil // a nil token will result in no data being sent to Azure (i.e. offline mode)
-token = try? AzureCocoaSAS.generateToken(for: hub.endpoint.absoluteString, using: policy, lifetime: 60 * 60 * 24)
+token = try? AzureCocoaSAS.generateToken(for: hub.endpoint.absoluteString, using: policy, lifetime: 60 * 60 * 24 * 7)
+
 
 
 /*
@@ -33,76 +34,41 @@ token = try? AzureCocoaSAS.generateToken(for: hub.endpoint.absoluteString, using
 /*
  * Here are a few helpers to make sure that code is run to completion and program doesn't terminate prematurely without sending events.
  */
+
+func shouldTerminate() -> Bool {
+    return false
+}
+
+func dump(event: EventSequence.Event) {
+    print("\(Date())\t \(event)")
+}
+
+
+
+/*
+ * Send events with the specified names.
+ * The initial values and delays between each event are defined per event stream.
+ */
+
+typealias Stream = (name: String, initialValue: Int, maxWait: Int)
+
+let deposit: Stream = (name: "deposit", initialValue: 1000, maxWait: 14)
+let withdrawal: Stream = (name: "withdrawal", initialValue: 50, maxWait: 7)
+let purchase: Stream = (name: "purchase", initialValue: 10, maxWait: 3)
+
+let streams = [ deposit, withdrawal, purchase ]
+
 let group = DispatchGroup()
+for s in streams {
+    let sequence = EventSequence(name: s.name, initialValue: s.initialValue)
+    let streamer = EventStreamer(sequence: sequence)
 
-func wait() {
     group.enter()
-    group.wait()
+    streamer.stream(to: hub, using: token, until: shouldTerminate, invoking: dump, maxWait: s.maxWait) {
+        group.leave()
+        Thread.sleep(forTimeInterval: 7)
+    }
 }
-
-func exit() {
-    group.leave()
-    Thread.sleep(forTimeInterval: 5)
-    exit(0)
-}
-
-
-
-/*
- * Send events with name "ping", with a pseudo-random initial value, and a delay of <5 secs between each event.
- * Only 7 events are sent, as per `limit`; removing this paramater removes the limit, keeping the stream active.
- */
-
-//stream(event: "ping", to: hub, using: token, limit: 7, completion: exit) // limited to 7 events
-//wait()
-
-//stream(event: "ping", to: hub, using: token, completion: exit) // unbound number of streamed events
-//wait()
-
-
-
-/*
- * Send events with names "deposit", "withdrawal", and "purchase".
- * The initial values are pseudo-random, and a delay of <5 secs is added between each event.
- * Each event names acts as a unique stream of events; the delays and values are calculated independently in each stream.
- * The `limit` is shared across all active streams.
- */
-
-//stream(events: [ "deposit", "withdrawal", "purchase" ], to: hub, using: token, limit: 21, completion: exit) // limited to 21 events
-//wait()
-
-//stream(events: [ "deposit", "withdrawal", "purchase" ], to: hub, using: token, completion: exit) // unbound number of streamed events
-//wait()
-
-
-
-/*
- * Send events with name "ping"; the initial value and max delay are defined.
- */
-
-//let ping: EventMetadata = (name: "ping", initialValue: 128, maxWait: 3)
-
-//stream(event: ping, to: hub, using: token, limit: 5, completion: exit) // limited to 5 events
-//wait()
-
-//stream(event: ping, to: hub, using: token, completion: exit) // unbound number of streamed events
-//wait()
-
-
-
-/*
- * Send events with names "deposit", "withdrawal", and "purchase".
- * The initial values and max delays are defined per event stream.
- */
-
-let deposit: EventMetadata = (name: "deposit", initialValue: 1000, maxWait: 14)
-let withdrawal: EventMetadata = (name: "withdrawal", initialValue: 50, maxWait: 7)
-let purchase: EventMetadata = (name: "purchase", initialValue: 10, maxWait: 3)
-
-//stream(events: [ deposit, withdrawal, purchase ], to: hub, using: token, limit: 37, completion: exit) // has upper limit
-//wait()
-
-stream(events: [ deposit, withdrawal, purchase ], to: hub, using: token, completion: exit) // unbound number of streamed events
-wait()
+group.wait()
 
 

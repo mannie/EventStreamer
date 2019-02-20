@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		3649545E21FB915600B54404 /* AzureCocoaSAS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3649545A21FB914300B54404 /* AzureCocoaSAS.framework */; };
 		367CEC4420B2913B00BD879B /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 367CEC4320B2913B00BD879B /* main.swift */; };
-		36F58BE521CAEA9900B8195C /* StreamingUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F58BE421CAEA9900B8195C /* StreamingUtils.swift */; };
 		36F8E75520B3DBBC004D086D /* EventHub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F8E75420B3DBBC004D086D /* EventHub.swift */; };
 		36F8E75720B3DBE2004D086D /* EventSequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F8E75620B3DBE2004D086D /* EventSequence.swift */; };
 		36F8E75920B3DC31004D086D /* EventStreamer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F8E75820B3DC31004D086D /* EventStreamer.swift */; };
@@ -42,12 +41,12 @@
 /* Begin PBXCopyFilesBuildPhase section */
 		367CEC3E20B2913A00BD879B /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = /usr/share/man/man1/;
+			buildActionMask = 12;
+			dstPath = /usr/share/man/man1;
 			dstSubfolderSpec = 0;
 			files = (
 			);
-			runOnlyForDeploymentPostprocessing = 1;
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
@@ -55,7 +54,6 @@
 		3649545421FB914300B54404 /* AzureCocoaSAS.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AzureCocoaSAS.xcodeproj; path = AzureCocoaSAS/AzureCocoaSAS.xcodeproj; sourceTree = "<group>"; };
 		367CEC4020B2913A00BD879B /* EventStreamer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = EventStreamer; sourceTree = BUILT_PRODUCTS_DIR; };
 		367CEC4320B2913B00BD879B /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
-		36F58BE421CAEA9900B8195C /* StreamingUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamingUtils.swift; sourceTree = "<group>"; };
 		36F8E75420B3DBBC004D086D /* EventHub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventHub.swift; sourceTree = "<group>"; };
 		36F8E75620B3DBE2004D086D /* EventSequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventSequence.swift; sourceTree = "<group>"; };
 		36F8E75820B3DC31004D086D /* EventStreamer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventStreamer.swift; sourceTree = "<group>"; };
@@ -111,7 +109,6 @@
 			isa = PBXGroup;
 			children = (
 				367CEC4320B2913B00BD879B /* main.swift */,
-				36F58BE421CAEA9900B8195C /* StreamingUtils.swift */,
 				36F8E75420B3DBBC004D086D /* EventHub.swift */,
 				36F8E75620B3DBE2004D086D /* EventSequence.swift */,
 				36F8E75820B3DC31004D086D /* EventStreamer.swift */,
@@ -202,7 +199,6 @@
 			files = (
 				36F8E75520B3DBBC004D086D /* EventHub.swift in Sources */,
 				367CEC4420B2913B00BD879B /* main.swift in Sources */,
-				36F58BE521CAEA9900B8195C /* StreamingUtils.swift in Sources */,
 				36F8E75720B3DBE2004D086D /* EventSequence.swift in Sources */,
 				36F8E75920B3DC31004D086D /* EventStreamer.swift in Sources */,
 			);
