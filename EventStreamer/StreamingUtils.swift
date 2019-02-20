@@ -32,7 +32,7 @@ func stream(event: String, to hub: EventHub, using token: String?, limit: UInt=U
 
 
 
-typealias EventMetadata = (name: String, initialValue: Int, maxWait: UInt32)
+typealias EventMetadata = (name: String, initialValue: Int, maxWait: Int)
 
 func stream(events definitions: [EventMetadata], to hub: EventHub, using token: String?, limit: UInt=UInt.max, completion handler: CompletionHandler?=nil) {
     var count = 0
@@ -45,7 +45,7 @@ func stream(events definitions: [EventMetadata], to hub: EventHub, using token: 
         count += 1
     }
 
-    typealias SleepingStreamer = (streamer: EventStreamer, maxWait: UInt32)
+    typealias SleepingStreamer = (streamer: EventStreamer, maxWait: Int)
     
     let streamers: [SleepingStreamer] = definitions.map {
         let sequence = EventSequence(name: $0.name, initialValue: $0.initialValue)

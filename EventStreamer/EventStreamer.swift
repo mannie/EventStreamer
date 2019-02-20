@@ -43,7 +43,7 @@ final class EventStreamer {
                          using token: String?,
                          until condition: @escaping TerminationCondition,
                          invoking onStream: ((EventSequence.Event)->Void)?,
-                         maxWait duration: UInt32=5,
+                         maxWait duration: Int=5,
                          completion: CompletionHandler?=nil) {
         
         func stream() {
@@ -67,7 +67,8 @@ final class EventStreamer {
                     onStream?(event)
                 }
                 
-                Thread.sleep(forTimeInterval: TimeInterval(arc4random() % duration))
+                let sleep = TimeInterval(Int.random(in: 1...duration))
+                Thread.sleep(forTimeInterval: sleep)
             } while condition() == false && sequence.next() != nil
             
             completion?()

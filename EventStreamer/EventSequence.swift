@@ -26,18 +26,18 @@ struct EventSequence: Sequence, IteratorProtocol {
     private var previous: Event?
     var current: Event
     
-    init(name: String, initialValue value: Int = Int(arc4random() % 256)) {
+    init(name: String, initialValue value: Int = Int.random(in: 1...255)) {
         initial = Event(name: name, value: value)
         current = initial
         previous = nil
     }
     
     mutating func next() -> Event? {
-        let signer: Int = (arc4random() % 7) % 2 == 0 ? -1 : 1
+        let signer: Int = Int.random(in: 1...7) % 2 == 0 ? -1 : 1
         
         let value = current.value
-        let divisor = Int(value) == 0 ? 1 : Double(arc4random() % UInt32(value))
-        let delta = 1.0 / divisor * Double(value)
+        let divisor = Int(value) == 0 ? 1 : Int.random(in: 1...value)
+        let delta = 1.0 / Double(divisor) * Double(value)
         let next = 1 + value + (Int(delta.isFinite ? delta : 0) * signer)
         
         let event = Event(name: current.name, value: next)
