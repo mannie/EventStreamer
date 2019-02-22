@@ -18,7 +18,7 @@ import AzureCocoaSAS
 let policy = AzureCocoaSAS.SharedAccessPolicy(name: <#T##String#>, key: <#T##String#>)
 let hub = EventHub(namespace: <#String#>, name: <#String#>) // => http://$namespace.servicebus.windows.net/$name
 
-var token: String? = nil // a nil token will result in no data being sent to Azure (i.e. offline mode)
+var token: String? = nil
 token = try? AzureCocoaSAS.token(for: hub.endpoint.absoluteString, using: policy, lifetime: 60 * 60 * 24 * 7)
 
 
