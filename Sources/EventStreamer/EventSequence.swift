@@ -8,10 +8,6 @@
 
 import Foundation
 
-protocol CustomDictionaryConvertible {
-    var dictionary: [String:CustomStringConvertible] { get }
-}
-
 /**
  * This is a sequence generator based on a pseudo-random number generator based on the previous number.
  */
@@ -37,7 +33,7 @@ struct EventSequence: Sequence, IteratorProtocol {
         
         let value = current.value
         let divisor = Int(value) == 0 ? 1 : Int.random(in: 1...value)
-        let delta = 1.0 / Double(divisor) * Double(value)
+        let delta = Swift.min(0.1 * Double(value), 1.0 / Double(divisor) * Double(value)) // max change of 20%
         let next = 1 + value + (Int(delta.isFinite ? delta : 0) * signer)
         
         let event = Event(name: current.name, value: next)
@@ -45,6 +41,15 @@ struct EventSequence: Sequence, IteratorProtocol {
         current = event
         return event
     }
+}
+
+
+
+protocol CustomDictionaryConvertible {
+    var dictionary: [String:CustomStringConvertible] { get }
+}
+
+extension EventSequence: CustomDictionaryConvertible {
     
     var dictionary: [String : CustomStringConvertible] {
         var output: [String : CustomStringConvertible] = [ "name" : current.name, "initial" : initial.value, "current" : current.value ]
