@@ -9,7 +9,8 @@
 import Foundation
 
 typealias CompletionHandler = (()->Void)
-typealias TerminationCondition = ()->Bool
+typealias OnStreamHandler = (EventSequence)->Void
+typealias TerminationCondition = (EventSequence)->Bool
 
 /**
  * This class acts as the local API for the Azure EventHubs HTTP Client.
@@ -27,8 +28,8 @@ final class EventStreamer {
         self.init(sequence: sequence)
     }
     
-    private func request(for hub: EventHub, using token: String?) -> URLRequest? {
-        guard let token = token else {
+    private func request(for hub: EventHub?, using token: String?) -> URLRequest? {
+        guard let hub = hub, let token = token else {
             return nil
         }
         
@@ -39,16 +40,16 @@ final class EventStreamer {
         return request
     }
     
-    internal func stream(to hub: EventHub,
+    internal func stream(to hub: EventHub?,
                          using token: String?,
                          until condition: @escaping TerminationCondition,
-                         invoking onStream: ((EventSequence.Event)->Void)?,
+                         invoking onStream: OnStreamHandler?,
                          maxWait duration: Int=5,
                          completion: CompletionHandler?=nil) {
         
         func stream() {
             repeat {
-                let event = sequence.current
+                let sequence = self.sequence
                 
                 if var request = request(for: hub, using: token) {
                     var payload = sequence.dictionary
@@ -60,16 +61,16 @@ final class EventStreamer {
                         if let error = error {
                             print("*** \(error) ***")
                         }
-                        onStream?(event)
+                        onStream?(sequence)
                     }
                     sendEvent.resume()
                 } else {
-                    onStream?(event)
+                    onStream?(sequence)
                 }
                 
                 let sleep = TimeInterval(Int.random(in: 1...duration))
                 Thread.sleep(forTimeInterval: sleep)
-            } while condition() == false && sequence.next() != nil
+            } while condition(sequence) == false && sequence.next() != nil
             
             completion?()
         }

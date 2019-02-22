@@ -35,12 +35,15 @@ token = try? AzureCocoaSAS.token(for: hub.endpoint.absoluteString, using: policy
  * Here are a few helpers to make sure that code is run to completion and program doesn't terminate prematurely without sending events.
  */
 
-func shouldTerminate() -> Bool {
+func shouldTerminate(sequence: EventSequence) -> Bool {
     return false
 }
 
-func dump(event: EventSequence.Event) {
-    print("\(Date())\t \(event)")
+let formatter = DateFormatter()
+formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+func dump(sequence: EventSequence) {
+    let event = sequence.current
+    print("\(formatter.string(from: Date()))\t\t\(event.name.prefix(4))...\t\(event.value) \t\t\(sequence.dictionary)")
 }
 
 
@@ -64,11 +67,12 @@ for s in streams {
     let streamer = EventStreamer(sequence: sequence)
 
     group.enter()
+    // a nil `token` or `hub` will result in no data being sent to Azure (i.e. offline mode)
     streamer.stream(to: hub, using: token, until: shouldTerminate, invoking: dump, maxWait: s.maxWait) {
         group.leave()
         Thread.sleep(forTimeInterval: 7)
     }
 }
-group.wait()
+group.wait() // Let's make sure that the app doesn't exit before the streamers have finished streaming.
 
-
+ 
