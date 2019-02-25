@@ -3,22 +3,13 @@ A sample app showing how to stream data to Azure Event Hubs.
 
 ## Getting Started
  * Open the Xcode project (`EventStreamer.xcodeproj`).
- * Navigate to `main.swift` and find the editor placeholders; they should be located around `line 18`.
- ```swift
- let policy = AzureCocoaSAS.SharedAccessPolicy(name: <#T##String#>, key: <#T##String#>)
- let hub = EventHub(namespace: <#String#>, name: <#String#>) // => http://$namespace.servicebus.windows.net/$name
- ```
- * Paste the `namespace` of the Azure EventHubs and the `name` (path) of the Azure EventHub in the `hub` object's initializtion.
- * Paste the `name` and `key` of the Azure EventHub's shared access policy into the `policy` object's initialization.
-
- Your updated source code should look something like
- ```swift
- let policy = AzureCocoaSAS.SharedAccessPolicy(name: "SharedAccessKey", key: "Jp9cUB1iCF=")
- let hub = EventHub(namespace: "divergent", name: "streamer") // => http://divergent.servicebus.windows.net/streamer
-```
-
-
-
+ * Edit the target's scheme and add the following `Environment Variables`:
+   * `SASPolicyName`
+   * `SASPolicyKey`
+   * `EventHubNamespace`
+   * `EventHubName`
+   
+    If these environment variables are not set, the app will still run; it just won't stream anything to Azure.
  * Run the app; you should notice events being printed in your console output:
  ```sh
 2019-02-22 14:29:33		depo...	1000 		["current": 1000, "name": "deposit", "initial": 1000]
@@ -33,8 +24,6 @@ A sample app showing how to stream data to Azure Event Hubs.
 ...
 ```
  
- It's also possible to run the app *without* streaming to Azure; to do so, simply set `token` to `nil` in `main.swift` and run the app.
-
 ## How the Streamer Works
 It's all about the `EventStreamer.stream(to:using:until:invoking:maxWait:completion:)` method. Lets see some examples.
 

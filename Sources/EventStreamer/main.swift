@@ -7,19 +7,29 @@
 //
 
 import Foundation
-
 import AzureCocoaSAS
+
+
+
+var hub: EventHub? = nil
+var token: String? = nil
+
 
 /*
  * Create an EventHub in Azure along with a shared access policy allowing for clients to send events.
  * Paste the `namespace` of the Azure EventHubs and the `name` (path) of the Azure EventHub in the `hub` object's initializtion.
  * Paste the `name` and `key` of the Azure EventHub's shared access policy into the `policy` object's initialization.
  */
-let policy = AzureCocoaSAS.SharedAccessPolicy(name: <#T##String#>, key: <#T##String#>)
-let hub = EventHub(namespace: <#String#>, name: <#String#>) // => http://$namespace.servicebus.windows.net/$name
-
-var token: String? = nil
-token = try? AzureCocoaSAS.token(for: hub.endpoint.absoluteString, using: policy, lifetime: 60 * 60 * 24 * 7)
+let env = ProcessInfo.processInfo.environment
+if let name = env["SASPolicyName"], let key = env["SASPolicyKey"], let namespace = env["EventHubNamespace"], let path = env["EventHubName"] {
+    let policy = AzureCocoaSAS.SharedAccessPolicy(name: name, key: key)
+    let _hub = EventHub(namespace: namespace, name: path) // => http://$namespace.servicebus.windows.net/$name
+    
+    if let _token = try? AzureCocoaSAS.token(for: _hub.endpoint.absoluteString, using: policy, lifetime: 60 * 60 * 24 * 7) {
+        token = _token
+        hub = _hub
+    }
+}
 
 
 
