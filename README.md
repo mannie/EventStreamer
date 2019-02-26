@@ -2,28 +2,62 @@
 A sample app showing how to stream data to Azure Event Hubs. 
 
 ## Getting Started
- * Open the Xcode project (`EventStreamer.xcodeproj`).
- * Edit the target's scheme and add the following `Environment Variables`:
-   * `SASPolicyName`
-   * `SASPolicyKey`
-   * `EventHubNamespace`
-   * `EventHubName`
-   
-    If these environment variables are not set, the app will still run; it just won't stream anything to Azure.
+### Run The Streamer Locally
+* Open the Xcode project (`EventStreamer.xcodeproj`).
+* Edit the target's scheme and add the following `Environment Variables`:
+  * `SASPolicyName`
+  * `SASPolicyKey`
+  * `EventHubNamespace`
+  * `EventHubName`
+
+  If these environment variables are not set, the app will still run; it just won't stream anything to Azure.
  * Run the app; you should notice events being printed in your console output:
- ```sh
-2019-02-22 14:29:33		depo...	1000 		["current": 1000, "name": "deposit", "initial": 1000]
-2019-02-22 14:29:33		with...	50 		["current": 50, "name": "withdrawal", "initial": 50]
-2019-02-22 14:29:33		purc...	10 		["current": 10, "name": "purchase", "initial": 10]
-2019-02-22 14:29:34		purc...	12 		["current": 12, "initial": 10, "name": "purchase", "previous": 10]
-2019-02-22 14:29:35		purc...	14 		["current": 14, "initial": 10, "name": "purchase", "previous": 12]
-2019-02-22 14:29:37		depo...	1003 		["current": 1003, "initial": 1000, "name": "deposit", "previous": 1000]
-2019-02-22 14:29:38		with...	56 		["current": 56, "initial": 50, "name": "withdrawal", "previous": 50]
-2019-02-22 14:29:38		purc...	14 		["current": 14, "initial": 10, "name": "purchase", "previous": 14]
-2019-02-22 14:29:39		purc...	14 		["current": 14, "initial": 10, "name": "purchase", "previous": 14]
-...
-```
+    ```sh
+    2019-02-22 14:29:33		depo...	1000 		["current": 1000, "name": "deposit", "initial": 1000]
+    2019-02-22 14:29:33		with...	50 		["current": 50, "name": "withdrawal", "initial": 50]
+    2019-02-22 14:29:33		purc...	10 		["current": 10, "name": "purchase", "initial": 10]
+    2019-02-22 14:29:34		purc...	12 		["current": 12, "initial": 10, "name": "purchase", "previous": 10]
+    2019-02-22 14:29:35		purc...	14 		["current": 14, "initial": 10, "name": "purchase", "previous": 12]
+    2019-02-22 14:29:37		depo...	1003 		["current": 1003, "initial": 1000, "name": "deposit", "previous": 1000]
+    2019-02-22 14:29:38		with...	56 		["current": 56, "initial": 50, "name": "withdrawal", "previous": 50]
+    2019-02-22 14:29:38		purc...	14 		["current": 14, "initial": 10, "name": "purchase", "previous": 14]
+    2019-02-22 14:29:39		purc...	14 		["current": 14, "initial": 10, "name": "purchase", "previous": 14]
+    ...
+    ```
  
+### Run The App In A Docker Container
+* Create a `Dockerfile` with the following configuration:
+    ```yml
+    FROM swift
+    ENV SASPolicyName="SharedAccessKey"
+    ENV SASPolicyKey="Jp9cUB1iCF="
+    ENV EventHubNamespace="divergent"
+    ENV EventHubName="streamer"
+    WORKDIR /temp
+    COPY . ./
+    CMD swift package clean
+    CMD swift run
+    ```
+* Build the Docker image and tag it using:
+    ```sh
+    docker build --tag streamer .
+    ```
+#### Local
+* Run and cleanup the image on completion.
+    ```sh
+    docker run --rm streamer
+    ```
+#### Azure Container Instances
+* Create an Azure Container Registry via the portal; the script assumes a registry of name `` so feel free to update the following commands with the appropriate reference. 
+* Run the following commands to push the container into Azure:
+    ```sh
+    docker login manniecontainerdemo.azurecr.io
+    docker tag streamer manniecontainerdemo.azurecr.io/streamer
+    docker push manniecontainerdemo.azurecr.io/streamer
+    ```
+* Create an Azure Container Instance resource in Azure and provide the details for your private registry.
+    Upon deployment, the container should automatically start executing.
+
 ## How the Streamer Works
 It's all about the `EventStreamer.stream(to:using:until:invoking:maxWait:completion:)` method. Lets see some examples.
 
