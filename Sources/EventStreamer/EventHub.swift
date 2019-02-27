@@ -14,10 +14,10 @@ import Foundation
 struct EventHub {
     
     let namespace: String
-    let name: String
+    let path: String
     
     private var resourcePath: String {
-        return "https://\(namespace).servicebus.windows.net/\(name)".lowercased()
+        return "https://\(namespace).servicebus.windows.net/\(path)".lowercased()
     }
     
     var endpoint: URL {

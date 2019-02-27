@@ -8,7 +8,7 @@ A sample app showing how to stream data to Azure Event Hubs.
   * `SASPolicyName`
   * `SASPolicyKey`
   * `EventHubNamespace`
-  * `EventHubName`
+  * `EventHubPath`
 
   If these environment variables are not set, the app will still run; it just won't stream anything to Azure.
  * Run the app; you should notice events being printed in your console output:
@@ -32,7 +32,7 @@ A sample app showing how to stream data to Azure Event Hubs.
     ENV SASPolicyName="SharedAccessKey"
     ENV SASPolicyKey="Jp9cUB1iCF="
     ENV EventHubNamespace="divergent"
-    ENV EventHubName="streamer"
+    ENV EventHubPath="streamer"
     WORKDIR /temp
     COPY . ./
     CMD swift package clean
@@ -43,9 +43,9 @@ A sample app showing how to stream data to Azure Event Hubs.
     docker build --tag streamer .
     ```
 #### Local
-* Run and cleanup the image on completion.
+* Run and cleanup the image on completion. To stop the streamer, hit  `Ctrl + C`.
     ```sh
-    docker run --rm streamer
+    docker run --interactive --tty --rm streamer
     ```
 #### Azure Container Instances
 * Create an Azure Container Registry via the portal; the script assumes a registry of name `` so feel free to update the following commands with the appropriate reference. 
