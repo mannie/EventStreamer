@@ -1,5 +1,5 @@
 # EventStreamer
-A sample app showing how to stream data to Azure Event Hubs. 
+A sample app showing how to stream data to Azure Event Hubs.
 
 ## Getting Started
 ### Run The Streamer Locally
@@ -24,9 +24,9 @@ A sample app showing how to stream data to Azure Event Hubs.
     2019-02-22 14:29:39		purc...	14 		["current": 14, "initial": 10, "name": "purchase", "previous": 14]
     ...
     ```
- 
+
 ### Run The App In A Docker Container
-* Create a `Dockerfile` with the following configuration:
+* Update the `Dockerfile` with the following configuration:
     ```yml
     FROM swift
     ENV SASPolicyName="SharedAccessKey"
@@ -48,12 +48,14 @@ A sample app showing how to stream data to Azure Event Hubs.
     docker run --interactive --tty --rm streamer
     ```
 #### Azure Container Instances
-* Create an Azure Container Registry via the portal; the script assumes a registry of name `` so feel free to update the following commands with the appropriate reference. 
+* Create an Azure Container Registry via the portal; the script assumes a registry of name `` so feel free to update the following commands with the appropriate reference.
 * Run the following commands to push the container into Azure:
     ```sh
-    docker login manniecontainerdemo.azurecr.io
-    docker tag streamer manniecontainerdemo.azurecr.io/streamer
-    docker push manniecontainerdemo.azurecr.io/streamer
+    registry=address.to.registry # example streamer.azurecr.io
+
+    sudo docker login $registry
+    sudo docker tag streamer $registry/streamer
+    sudo docker push $registry/streamer
     ```
 * Create an Azure Container Instance resource in Azure and provide the details for your private registry.
     Upon deployment, the container should automatically start executing.
