@@ -40,6 +40,17 @@ final class EventStreamer {
         return request
     }
     
+    private func logStreamInfo(for hub: EventHub?, using token: String?) {
+        let name = sequence.current.name
+        
+        var endpoint = "n/a"
+        if let hub = hub, let _ = token {
+            endpoint = hub.endpoint.absoluteString
+        }
+
+        print("STREAM INFO\n\tendpoint\t \(endpoint)\n\tname\t\t \(name)\n")
+    }
+    
     internal func stream(to hub: EventHub?,
                          using token: String?,
                          until condition: @escaping TerminationCondition,
@@ -48,6 +59,8 @@ final class EventStreamer {
                          completion: CompletionHandler?=nil) {
         
         func stream() {
+            logStreamInfo(for: hub, using: token)
+            
             repeat {
                 let sequence = self.sequence
                 
