@@ -2,7 +2,7 @@ FROM swift
 ENV SASPolicyName=""
 ENV SASPolicyKey=""
 ENV EventHubNamespace=""
-ENV EventHubName=""
+ENV EventHubPath=""
 WORKDIR /temp
 COPY . ./
 CMD swift package clean
