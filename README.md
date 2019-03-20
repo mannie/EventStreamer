@@ -31,10 +31,10 @@ Ensure that you have Xcode installed, otherwise this sequence of steps won't wor
     ...
     ```
 
-    ![Streamer](Streamer.gif)
+    ![Running in Xcode](Xcode.gif)
 
 ### Run The App In A Docker Container
-Ensure that you have Docker installed, otherwise this sequence of steps won't work.
+Ensure that you have Docker installed and running, otherwise this sequence of steps won't work.
 
 * Update the `Dockerfile` with the following configuration:
     ```yml
@@ -57,6 +57,9 @@ Ensure that you have Docker installed, otherwise this sequence of steps won't wo
     ```sh
     docker run --interactive --tty --rm streamer
     ```
+
+    ![Running in Docker container](Container.gif)
+
 #### Azure Container Instances
 * Create an Azure Container Registry via the portal; the script assumes a registry of name `` so feel free to update the following commands with the appropriate reference.
 * Run the following commands to push the container into Azure:
