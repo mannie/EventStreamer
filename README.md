@@ -3,8 +3,14 @@ A sample app showing how to stream data to Azure Event Hubs.
 
 ## Getting Started
 ### Run The Streamer Locally
-* Open the Xcode project (`EventStreamer.xcodeproj`).
-* Edit the target's scheme and add the following `Environment Variables`:
+Ensure that you have Xcode installed, otherwise this sequence of steps won't work.
+
+* Run the `PrepareXCodeProj.sh` script via CLI which will prepare the build the project and create an Xcode project file.
+    ```sh
+    ./PrepareXCodeProj.sh
+    ```
+* When prompted to open the EventStreamer project, select `Open`.
+* Edit the target's scheme, adding the following `Environment Variables` with the corresponding values:
   * `SASPolicyName`
   * `SASPolicyKey`
   * `EventHubNamespace`
@@ -26,6 +32,8 @@ A sample app showing how to stream data to Azure Event Hubs.
     ```
 
 ### Run The App In A Docker Container
+Ensure that you have Docker installed, otherwise this sequence of steps won't work.
+
 * Update the `Dockerfile` with the following configuration:
     ```yml
     FROM swift
