@@ -31,6 +31,8 @@ Ensure that you have Xcode installed, otherwise this sequence of steps won't wor
     ...
     ```
 
+    ![Streamer](Streamer.gif)
+
 ### Run The App In A Docker Container
 Ensure that you have Docker installed, otherwise this sequence of steps won't work.
 
